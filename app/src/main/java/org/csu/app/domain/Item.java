@@ -11,12 +11,12 @@ public class Item implements Serializable {
   private String productId;
   private String listPrice;
   private String unitCost;
-  private String supplier;
+  private int supplier;
   private String status;
 
   public Item() { }
 
-  public Item(String itemId, String productId, String listPrice, String unitCost, String supplier, String status) {
+  public Item(String itemId, String productId, String listPrice, String unitCost, int supplier, String status) {
     this.itemId = itemId;
     this.productId = productId;
     this.listPrice = listPrice;
@@ -33,11 +33,11 @@ public class Item implements Serializable {
     this.itemId = itemId.trim();
   }
 
-  public String getSupplier() {
+  public int getSupplier() {
     return supplier;
   }
 
-  public void setSupplier(String supplier) {
+  public void setSupplier(int supplier) {
     this.supplier = supplier;
   }
 
@@ -75,7 +75,7 @@ public class Item implements Serializable {
 
   @Override
   public String toString() {
-    return getItemId() + "-" + getProductId() + "-$" + getListPrice() + "-" + getSupplier() + "-" + getStatus();
+    return getItemId() + ", " + getProductId() + ", $" + getListPrice() + ", " + getSupplier() + ", " + getStatus();
   }
 
 }

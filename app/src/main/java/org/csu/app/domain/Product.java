@@ -19,6 +19,9 @@ public class Product implements Serializable {
         return productId;
     }
 
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public String getCatId() {
         return catId;
@@ -26,10 +29,6 @@ public class Product implements Serializable {
 
     public void setCatId(String catId) {
         this.catId = catId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
     }
 
     public String getProductName() {

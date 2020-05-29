@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import org.csu.app.domain.Item;
+import org.csu.app.domain.User;
 import org.csu.app.util.HttpRequest;
 import org.csu.app.util.StreamTool;
 import org.csu.app.util.URLCollection;
@@ -25,16 +26,30 @@ import java.util.ArrayList;
 public class ItemActivity extends AppCompatActivity {
 
     private ListView item_list_view;
-    private String items_url = URLCollection.ITEMS_URL;
+    private TextView u_view;
+    private String items_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
         item_list_view = findViewById(R.id.item_list);
+        u_view = findViewById(R.id.u);
 
         String productId = getIntent().getStringExtra("productId");
-        items_url = items_url + productId;
+        items_url = URLCollection.ITEMS_URL + productId;
+
+        AppSession session = (AppSession) getApplication();
+        User user = session.getUser();
+
+        u_view.setText(user.getUsername());
+        u_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ItemActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         asyncTask.execute();
 
@@ -65,11 +80,9 @@ public class ItemActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     CharSequence text = ((TextView) view).getText();
-                    String[] itemText = text.toString().split("-");
-                    String itemId = itemText[0] + "-" + itemText[1];
+                    String itemId = text.toString().split(",")[0];
                     Intent intent = new Intent(ItemActivity.this, PurchaseActivity.class);
                     intent.putExtra("itemId", itemId);
-//                    intent.putExtra("user", user);
                     startActivity(intent);
                 }
 
@@ -89,8 +102,8 @@ public class ItemActivity extends AppCompatActivity {
                 String itemId = jsonObject.getString("itemId");
                 String productId = jsonObject.getString("productId");
                 String listPrice = jsonObject.getString("listPrice");
-                String unitCost = jsonObject.getString("unitCost");
-                String supplier = jsonObject.getString("supplier");
+                String unitCost = jsonObject.getString("unitcost");
+                int supplier = jsonObject.getInt("supplier");
                 String status = jsonObject.getString("status");
                 items.add(new Item(itemId, productId, listPrice, unitCost, supplier, status));
             }

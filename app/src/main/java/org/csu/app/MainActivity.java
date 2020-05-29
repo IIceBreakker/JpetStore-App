@@ -1,17 +1,13 @@
 package org.csu.app;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import org.csu.app.domain.Cart;
 import org.csu.app.domain.User;
 import org.csu.app.util.HttpRequest;
 import org.csu.app.util.StreamTool;
@@ -22,27 +18,37 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView u_view;
-    private User user;
     private ListView cat_list_view;
-    private final String category_url = URLCollection.CATEGORY_URL;
+    private String category_url;
 
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         cat_list_view = findViewById(R.id.cat_list);
         u_view = findViewById(R.id.u);
 
-        user = (User) getIntent().getSerializableExtra("user");
-        if (user != null) {
-            u_view.setText(user.getUsername());
-        }
+        category_url = URLCollection.CATEGORY_URL;
+
+        final AppSession session = (AppSession) getApplication();
+        User user = session.getUser();
+        u_view.setText(user.getUsername());
+        u_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //异步任务进行Http请求
         asyncTask.execute();
@@ -60,25 +66,33 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String[] catList) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, catList);
-                cat_list_view.setAdapter(adapter);
-
-                //为listView注册监听
-                cat_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        CharSequence text = ((TextView) view).getText();
-                        String catId = text.toString().toUpperCase();
-                        Intent intent = new Intent(MainActivity.this, ProductActivity.class);
-                        intent.putExtra("catId", catId);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
-                    }
-
-                });
+                int[] images = new int[] { R.drawable.birds_icon, R.drawable.cats_icon,
+                                R.drawable.dogs_icon, R.drawable.fish_icon, R.drawable.reptiles_icon };
+                List<Map<String, Object>> listItems = new ArrayList<>();
+                for (int i = 0; i < images.length; i ++) {
+                    Map<String, Object> listItem = new HashMap<>();
+                    listItem.put("header", images[i]);
+                    listItem.put("catId", catList[i]);
+                    listItems.add(listItem);
+                }
+                SimpleAdapter simpleAdapter = new SimpleAdapter(MainActivity.this, listItems, R.layout.simple_item,
+                        new String[] {"catId", "header"}, new int[] {R.id.name, R.id.header});
+                cat_list_view.setAdapter(simpleAdapter);
+                cat_list_view.setOnItemClickListener(listViewListener);
             }
         };
+
+    //listView的监听器
+    private final AdapterView.OnItemClickListener listViewListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            CharSequence text = ((TextView) view.findViewById(R.id.name)).getText();
+            String catId = text.toString().toUpperCase();
+            Intent intent = new Intent(MainActivity.this, ProductActivity.class);
+            intent.putExtra("catId", catId);
+            startActivity(intent);
+        }
+    };
 
     //实际的HTTP请求方法
     private String[] getCategory() {

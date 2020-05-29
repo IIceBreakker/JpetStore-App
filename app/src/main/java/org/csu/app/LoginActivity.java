@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
+import org.csu.app.domain.Cart;
 import org.csu.app.domain.User;
 import org.csu.app.util.HttpRequest;
 import org.csu.app.util.StreamTool;
@@ -22,16 +23,17 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameIn;
     private EditText passwordIn;
     private Button login;
-    private final String login_url = URLCollection.LOGIN_URL;
+    private String login_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         usernameIn = findViewById(R.id.username);
         passwordIn = findViewById(R.id.password);
         login = findViewById(R.id.login);
+
+        login_url = URLCollection.LOGIN_URL;
 
     }
 
@@ -51,7 +53,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(User user) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("user", user);
+                AppSession session = (AppSession) getApplication();
+                Cart cart = new Cart();
+                session.setCart(cart);
+                session.setUser(user);
                 startActivity(intent);
             }
         }.execute();
