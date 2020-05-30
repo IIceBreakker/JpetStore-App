@@ -5,6 +5,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ *  httpGet method accepts a url {@link String}, httpPost method accepts a url and data {@link String}
+ *  and they both return a {@link HttpURLConnection}
+ *
+ *  @author IIceBreakker 575987720@qq.com
+ */
 public class HttpRequest {
 
     public static HttpURLConnection httpGet(String _url) throws IOException {

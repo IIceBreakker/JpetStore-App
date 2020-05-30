@@ -24,7 +24,6 @@ public class PurchaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_purchase);
         result_view = findViewById(R.id.result);
 
-        String itemId = getIntent().getStringExtra("itemId");
         add_order_url = URLCollection.ADD_ORDER_URL;
 
         asyncTask.execute();

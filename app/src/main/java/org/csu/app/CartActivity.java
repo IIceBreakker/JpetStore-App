@@ -57,6 +57,7 @@ public class CartActivity extends AppCompatActivity {
         }
     };
 
+    //真正的异步任务，向服务器请求资源，其他Activity同理
     private String[] getOrders() {
         String[] orderList = null;
         try {

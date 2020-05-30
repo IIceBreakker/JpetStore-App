@@ -3,8 +3,8 @@ package org.csu.app.util;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import androidx.annotation.Nullable;
 
+//Not used yet.
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE = "test.db";

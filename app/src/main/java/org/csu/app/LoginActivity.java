@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         username = usernameIn.getText().toString();
         password = passwordIn.getText().toString();
 
+        //这里是登录，直接创建实例执行
         new AsyncTask<Void, Void, User>() {
 
             @Override
@@ -71,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    //注册
                                     asynTask2.execute();
                                 }
 
@@ -100,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    //用来注册的真正的异步任务，向服务器进行插入请求
     private String httpRegister(String u, String p) {
         String result = "";
         try {
@@ -116,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //登录的真正异步任务
     private User httpLogin(String u, String p) {
         User user = new User();
         try {

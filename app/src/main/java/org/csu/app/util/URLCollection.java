@@ -1,7 +1,13 @@
 package org.csu.app.util;
 
 
-//This class is used to manage all http urls;
+import java.net.HttpURLConnection;
+
+/**
+ * This class is used to manage all http urls;
+ * @author IIceBreakker 575987220@qq.com
+ */
+
 public class URLCollection {
 
     public static final String LOGIN_URL = "http://10.0.2.2:3000/login";

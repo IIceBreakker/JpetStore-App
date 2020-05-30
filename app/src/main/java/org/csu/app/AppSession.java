@@ -4,7 +4,7 @@ import android.app.Application;
 import org.csu.app.domain.Cart;
 import org.csu.app.domain.User;
 
-
+//This AppSession class creates a global session like that in web app.
 public class AppSession extends Application {
 
     private User user;
